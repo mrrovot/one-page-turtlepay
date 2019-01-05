@@ -5,9 +5,15 @@
                 <img src="/images/franklin.png" alt="">
             </div>
             <div class="mb-4">
-                Post your message
+                <span id="postMsg">Post your message</span>
+                <span class="hidden" id="postedMsg">
+                    `<div class="mb-3">
+                Your message was posted!
+                <img src="/images/duuude.png" alt="">
+            </div>`
+                </span>
             </div>
-            <textarea name="customMsg" class="mb-4 py-4 px-4 w-1/2 border-2 border-green-dark w-full" maxlength="150" placeholder="@myuser was here"></textarea>
+            <textarea name="customMsg" id="textarea" class="mb-4 py-4 px-4 w-1/2 border-2 border-green-dark w-full" maxlength="150" placeholder="@myuser was here"></textarea>
             <div id="btn" class=" m-0 m-auto md:m-0 mb-10 md:mb-4 py-3 px-4 bg-green text-center w-64 rounded text-white cursor-pointer text-lg">
                 Submit
             </div>
@@ -37,6 +43,13 @@ document.querySelector("#btn").addEventListener('click', function() {
 
         })
         .then(function(response) {
+            document.querySelector("#textarea").style.display = "none";
+            document.querySelector("#btn").style.display = "none";
+            document.querySelector("#postedMsg").style.display = "inline-block";
+            document.querySelector("#postMsg").style.display = "none";
+
+            
+
             console.log(response.data);
         })
         .catch(function(error) {
