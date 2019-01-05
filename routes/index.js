@@ -23,56 +23,35 @@ router.get('/', function(req, res, next) {
     // get the namespace for sockets and to send tu trtl
     uniquePaymentIdentifier = res.locals.nameSpace;
 
-        //send msg to client to make sure all working
-        var socketio = req.app.get('socketio').of(`/${res.locals.nameSpace}`)
-        socketio.emit('message', `you are connected  to ${res.locals.nameSpace}`)
+    //send msg to client to make sure all working
+    var socketio = req.app.get('socketio').of(`/${res.locals.nameSpace}`)
+    socketio.emit('message', `you are connected  to ${res.locals.nameSpace}`)
 
-    turtlePayData = {
-        "amount": 1000,//change this to the price of your product
-        "address": "TRTLv2n21XRdNr43DAp7WXYMm3MBcS9n8ZTsDcmZ7WVdM4J9uSTWsYAEFoWyvRCcgVesyGBjYkD4qF67R7R4odSQf7n7iE58hV6", //change this to your private TRTL address
-        "callback": "https://whosent10turtles.info/turtlepay", //make sure you change this to your url
-        "confirmations": 2, //you can pick here how many confirmatiions before you consider the payment done
-        "userDefined": {
-            "user": uniquePaymentIdentifier
-        }
-    }
-
-    
-    // //call turtlepay and pass our data
-    // axios.post('https://api.turtlepay.io/v1/new', turtlePayData)
-    //     .then(function(response) {
-    //         console.log(response.data);
-
-            
-    //     })
-    //     .catch(function(error) {
-    //         console.log(error);
-    //     });
-        res.render('index', { title: 'Express', id: uniquePaymentIdentifier });
+    res.render('index', { title: 'Express', id: uniquePaymentIdentifier });
 
 });
 
 
-router.post('/get-turtlepay-wallet', (req,res,next) => {
+router.post('/get-turtlepay-wallet', (req, res, next) => {
 
     turtlePayData = {
-        "amount": 100,//change this to the price of your product
+        "amount": 100, //change this to the price of your product
         "address": "TRTLv2n21XRdNr43DAp7WXYMm3MBcS9n8ZTsDcmZ7WVdM4J9uSTWsYAEFoWyvRCcgVesyGBjYkD4qF67R7R4odSQf7n7iE58hV6", //change this to your private TRTL address
-        "callback": "http://133f50e6.ngrok.io/turtlepay", //make sure you change this to your url
+        "callback": "https://whosent10turtles.info/turtlepay", //make sure you change this to your url
         "confirmations": 2, //you can pick here how many confirmatiions before you consider the payment done
         "userDefined": {
             "user": req.body.user
         }
     }
 
-    
+
     //call turtlepay and pass our data
     axios.post('https://api.turtlepay.io/v1/new', turtlePayData)
         .then(function(response) {
-            res.status(200).json({sendToAddress: response.data.sendToAddress, qrCode: response.data.qrCode, user: response.data.userDefined.user})
-          
+            res.status(200).json({ sendToAddress: response.data.sendToAddress, qrCode: response.data.qrCode, user: response.data.userDefined.user })
 
-            
+
+
         })
         .catch(function(error) {
             console.log(error);
@@ -142,8 +121,8 @@ router.post('/turtlepay', (req, res) => {
         if (req.body.status === 200) {
             console.log('went through,hash: ' + req.body.txnHash)
 
-            
-             db.get('users')
+
+            db.get('users')
                 .push({ txnHash: req.body.txnHash, createdAt: new Date() })
                 .write()
 
