@@ -3,7 +3,7 @@
         <div class="md:w-1/2 w-5/6 m-0 m-auto md:m-0 text-center md:text-left">
             <div class="flex flex-col md:justify-start">
                 <div class="flex">
-                    <h1 class="mb-10">Send 10 Turtle To See Who sent 10 trtl<img src="/images/franklin.png" alt="" height="32"></h1>
+                    <h1 class="mb-10">Send 10 Turtle & See Who sent 10 trtl<img src="/images/franklin.png" alt="" height="32"></h1>
                 </div>
                 <div class="mb-10 leading-normal tracking-wide text-lg">
                     Send 10TRTL to the address below, watch TurtlePay in action and see who has been here before you, and what message did they leave!<strong></strong>
@@ -12,17 +12,26 @@
                     TRTL 10'00
                 </div>
                 <div class="text-md text-green-dark">
-                    Send the payment now and see TurtlePay in action.
-                </div>
-                <div class="">
-                    <img src="{{qrCode}}" alt="">
+                   <div id="btn" class=" m-0 m-auto md:m-0 mb-10 md:mb-4 py-3 px-4 bg-green text-center w-64 rounded text-white cursor-pointer text-lg">
+                Pay now
             </div>
-                    <div class="mb-4">
-                        <div id="trtlwallet" class="w-full bg-grey-lightest py-3 px-3 cursor-pointer">{{wallet}}</div>
+            <span id="sendInfo" class="hidden">
+              Send the payment now and see TurtlePay in action.
+            </span>
+                </div>
+
+              <span class="hidden" id="paymentDetails">
+                   <div class="">
+                    <img src="" alt="" id="qrCode">
+            </div>
+                    <div class="mb-4 ">
+                        <textarea id="trtlwallet" class="w-full bg-grey-lightest py-3 px-3 cursor-pointer h-24"></textarea>
                     </div>
-                    <div class="mb-4 text-sm text-black">
+                    <div class="mb-4 text-sm text-black ">
                         <strong>Note: </strong>This wallet will expire in <span id="countTime" class="font-bold"></span> mins, refresh for a new wallet if you need more time.
                     </div>
+              </span>
+             
                 </div>
             </div>
             <div class="w-5/6 m-0 m-auto md:m-0 text-center mb-4 md:mb-0">
@@ -66,11 +75,63 @@
         </div>
     </div>
 </section>
-  
 <script>
 
+// request for a sendToAddress from TurtlePay
+
+
+document.querySelector("#btn").addEventListener('click', function() {
+
+
+  axios.post('/get-turtlepay-wallet', {
+            user: "{{id}}"
+
+        })
+        .then(function(response) {
+          //set qr code
+          document.querySelector("#qrCode").src = response.data.qrCode;
+          
+          //set sendto wallet
+          document.querySelector("#trtlwallet").value = response.data.sendToAddress
+          //hide pay now btn
+          document.querySelector("#btn").style.display = 'none'
+          //show payment details span
+            document.querySelector("#paymentDetails").style.display = 'inline-block'
+          //show send payment text
+            document.querySelector("#sendInfo").style.display = 'inline-block'
+
+            //countdown to new wallet 
+           var countdown = 30 * 60 * 1000;
+          var timerId = setInterval(function(){
+            countdown -= 1000;
+            var min = Math.floor(countdown / (60 * 1000));
+            var sec = Math.floor((countdown - (min * 60 * 1000)) / 1000); 
+
+            if (countdown <= 0) {
+               clearInterval(timerId);
+               
+            } else {
+               if (sec.toString().length == 1) {
+                      sec = "0" + sec;
+                  }
+
+               document.querySelector("#countTime").innerHTML = min + ":" + sec;
+
+            }
+
+}, 1000);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+
+})
+ 
+
+console.log("{{id}}")
  var socket = io(`/${"{{id}}"}`);
  socket.on('message', function(data) {
+    console.log(data)
      if (data.status === 100 || data.status == 102) {
       console.log('confirmations remaining: ' + data.confirmationsRemaining);
 
@@ -98,36 +159,19 @@
      }
  });
 
-window.onload = function() {
-
- //countdown to new wallet 
- var countdown = 30 * 60 * 1000;
-var timerId = setInterval(function(){
-  countdown -= 1000;
-  var min = Math.floor(countdown / (60 * 1000));
-  var sec = Math.floor((countdown - (min * 60 * 1000)) / 1000); 
-
-  if (countdown <= 0) {
-     alert("30 min!");
-     clearInterval(timerId);
-     
-  } else {
-     document.querySelector("#countTime").innerHTML = min + ":" + sec;
-  }
-
-}, 1000);
-}
-
-
-
-// TODO: copy wallet to clipboard when clicking on it, need dev help to finish this
-// document.querySelector('#trtlwallet').addEventListener('click', function() {
+// copy wallet to clipboard when clicking on it
+document.querySelector('#trtlwallet').addEventListener('click', function() {
       
-//    // copyText = document.getElementById('trtlwallet');
-//    // copyText.select();
-//    // document.execCommand("copy");
+   copyText = document.getElementById('trtlwallet');
+   copyText.select();
+   document.execCommand("copy");
   
 
-//    //  alert('copied to clipboard')
-// })
+    alert('Address copied clipboard')
+})
+
+
+
+
+
 </script>
