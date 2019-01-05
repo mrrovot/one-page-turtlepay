@@ -23,9 +23,9 @@ router.get('/', function(req, res, next) {
     // get the namespace for sockets and to send tu trtl
     uniquePaymentIdentifier = res.locals.nameSpace;
     turtlePayData = {
-        "amount": 100,//change this to the price of your product
+        "amount": 1000,//change this to the price of your product
         "address": "TRTLv2n21XRdNr43DAp7WXYMm3MBcS9n8ZTsDcmZ7WVdM4J9uSTWsYAEFoWyvRCcgVesyGBjYkD4qF67R7R4odSQf7n7iE58hV6", //change this to your private TRTL address
-        "callback": "http://dd1a0949.ngrok.io/turtlepay", //make sure you change this to your url
+        "callback": "https://whosent10turtles.info/turtlepay", //make sure you change this to your url
         "confirmations": 2, //you can pick here how many confirmatiions before you consider the payment done
         "userDefined": {
             "user": uniquePaymentIdentifier

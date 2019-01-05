@@ -6,7 +6,7 @@ This is a one page app to create apps or sell products accepting TRTL via Turtle
 
 Install the dependencies and start the server.
 
-1) Clone this repo with `git clone https://github.com`
+1) Clone this repo with `git clone https://github.com/mrrovot/one-page-turtlepay.git`
 1) cd into it and install all dependenciens with `npm install`
 1) run `npm run start` to start the server at port `3000`
 
