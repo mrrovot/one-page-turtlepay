@@ -1,0 +1,46 @@
+<section id="main" class="mb-16 text-xl text-green-dark">
+    <div class="flex justify-center text-center md:text-left m-0 m-auto md:m-0 md:justify-between md:flex-row flex-col md:-mx-6">
+        <div class="flex m-0 m-auto md:m-0 justify-center md:justify-start flex-col w-5/6 md:w-2/5 md:px-6">
+        	 <div class="mb-4 md:hidden">
+                <img src="/images/franklin.png" alt="">
+            </div>
+            <div class="mb-4">
+                Post your message
+            </div>
+            <textarea name="customMsg" class="mb-4 py-4 px-4 w-1/2 border-2 border-green-dark w-full" maxlength="150" placeholder="@myuser was here"></textarea>
+            <div id="btn" class=" m-0 m-auto md:m-0 mb-10 md:mb-4 py-3 px-4 bg-green text-center w-64 rounded text-white cursor-pointer text-lg">
+                Submit
+            </div>
+        </div>
+        <div class="w-5/6 md:w-3/5 m-0 m-auto md:m-0 md:px-6">
+            <ul class="list-reset float-left text-center md:text-left " id="List">
+                {{#each users}}
+                <li class="mb-2">- {{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</section>
+<script>
+document.querySelector("#btn").addEventListener('click', function() {
+    console.log(document.querySelector('textarea').value)
+
+    var newItem = document.createElement("LI"); // Create a <li> node
+    var textnode = document.createTextNode("- " + document.querySelector('textarea').value); // Create a text node
+    newItem.appendChild(textnode); // Append the text to <li>
+
+    var list = document.getElementById("List"); // Get the <ul> element to insert a new node
+    list.insertBefore(newItem, list.childNodes[0]);
+
+    axios.post('/thankyou', {
+            msg: document.querySelector('textarea').value,
+
+        })
+        .then(function(response) {
+            console.log(response.data);
+        })
+        .catch(function(error) {
+            console.log(error);
+        });
+})
+</script>
