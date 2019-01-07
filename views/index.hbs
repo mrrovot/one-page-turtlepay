@@ -159,7 +159,13 @@ console.log("{{id}}")
      }
  });
 
-// copy wallet to clipboard when clicking on it
+
+function isMobileDevice() {
+    return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1);
+};
+
+if (!isMobileDevice()) {
+  // copy wallet to clipboard when clicking on it
 document.querySelector('#trtlwallet').addEventListener('click', function() {
       
    copyText = document.getElementById('trtlwallet');
@@ -169,6 +175,8 @@ document.querySelector('#trtlwallet').addEventListener('click', function() {
 
     alert('Address copied clipboard')
 })
+}
+
 
 
 
